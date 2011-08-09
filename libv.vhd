@@ -13,6 +13,12 @@ package libv is
     procedure assert_equal (prefix : string; got, expected : integer; level: severity_level := error);
     procedure assert_equal (prefix        : string; got, expected : integer_vector; level : severity_level := error);
 
+    -- Convert between boolean / std_[u]logic.
+    function active_high (constant val : in boolean) return std_ulogic;
+    function active_high (constant val : in std_ulogic) return boolean;
+    function active_low (constant val : in boolean) return std_ulogic;
+    function active_low (constant val : in std_ulogic) return boolean;
+
     function str (val : integer; length : natural := 0) return string;
     function str (val : boolean; length : natural range 0 to 1 := 0) return string;
 
@@ -42,6 +48,50 @@ package body libv is
         return chars_needed;
     end function num_chars;
 
+    -- Function : active_high(boolean)
+    -- Takes a boolean and converts it to an active high std_ulogic.
+    function active_high(constant val : in boolean)
+        return std_ulogic is begin
+        if val then
+            return '1';
+        else
+            return '0';
+        end if;
+    end function active_high;
+
+    -- function : active_high(std_ulogic)
+    -- takes an active high std_ulogic and converts it to a boolean.
+    function active_high(constant val : in std_ulogic)
+        return boolean is begin
+        if val = '1' then
+            return true;
+        else
+            return false;
+        end if;
+    end function active_high;
+
+    -- Function : active_low(boolean)
+    -- Takes a boolean and converts it to an active low std_ulogic.
+    function active_low(constant val : in boolean)
+        return std_ulogic is begin
+        if val then
+            return '0';
+        else
+            return '1';
+        end if;
+    end function active_low;
+
+    -- function : active_low(std_ulogic)
+    -- takes an active low std_ulogic and converts it to a boolean.
+    function active_low(constant val : in std_ulogic)
+        return boolean is begin
+        if val = '0' then
+            return true;
+        else
+            return false;
+        end if;
+    end function active_low;
+ 
     -- Function: str(integer)
     -- Takes an integer and optional length.  If length is zero, simply returns a string representing the integer
     -- If length is too short to hold the string, then the whole string is also returned
